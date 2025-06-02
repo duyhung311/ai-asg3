@@ -64,7 +64,7 @@ def build_kd_tree(P, D=0):
 
     left_points = [p for p in P_sorted if p[d] <= median_val and p != median_point]
     right_points = [p for p in P_sorted if p[d] > median_val]
-
+    print(D, start_dim)
     if D == start_dim:
         indent = '.' * D
         print(f"{indent}l{len(left_points)}")
