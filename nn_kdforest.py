@@ -5,6 +5,9 @@ from math import inf
 from typing import List
 
 
+STUDENT_ID = 'a1903971' # your student ID
+DEGREE = 'PG' # or PG if you are in the postgraduate course
+
 class KdNode:
     def __init__(self, point, d, val):
         self.point = point
@@ -21,6 +24,7 @@ def generate_sample_indexes(N: int, N_prime: int, n_trees: int, rand_seed: int) 
         subsample_idx = random.sample(index_list, k=N_prime)  # create unique N’ indices
         sample_indexes = sample_indexes + subsample_idx
     return sample_indexes
+
 star_dim = 0  # Global variable to capture starting dimension
 def build_kd_tree(P, D=0):
     global start_dim
@@ -66,13 +70,11 @@ def build_kd_tree(P, D=0):
 def KdForest(data, d_list, rand_seed):
     forest = []
     n_trees = len(d_list)
-    print(n_trees, d_list)
     N = len(data)
-    N_prime = round(N ** 0.8)  # N' is 80% of N
+    N_prime = round(N * 0.8)  # N' is 80% of N
 
     # Get the sample indexes
     sample_indexes = generate_sample_indexes(N, N_prime, n_trees, rand_seed)
-
     count = 0
     for i in range(n_trees):
         # Sequentially get N' indexes for this tree
@@ -91,7 +93,11 @@ def KdForest(data, d_list, rand_seed):
     return forest
 
 def euclidean_dist2(p1, p2):
-    return sum((a - b) ** 2 for a, b in zip(p1, p2))
+    dist = 0
+    for i in range(10):
+        diff = p1[i] - p2[i]
+        dist += diff * diff
+    return dist
 
 def find_1nn(node, target, best=None, best_dist=inf):
     if node is None:
@@ -104,10 +110,11 @@ def find_1nn(node, target, best=None, best_dist=inf):
     if dist_to_point < best_dist:
         best = point
         best_dist = dist_to_point
-    go_left = target[d] <= node.val
+        
+    go_left_or_right = target[d] <= node.val
 
-    first = node.left if go_left else node.right
-    second = node.right if go_left else node.left
+    first = node.left if go_left_or_right else node.right
+    second = node.right if go_left_or_right else node.left
 
     best, best_dist = find_1nn(first, target, best, best_dist)
 
@@ -166,11 +173,11 @@ numbers = n_trees_str.strip('[]').split(',')
 n_trees = [int(x.strip()) for x in numbers]
 
 train_data = read_data(train_file)
-print(len(train_data))
 test_data = read_data(test_file)
 
 # tree = build_kd_tree(train_data, D=start_dim)
 forest = KdForest(train_data, n_trees, rand_seed=rand_seed)
+
 for i, test_point in enumerate(test_data):
     nn = Predict_KdForest(forest, test_point)
     print(f"{int(nn[11])}")

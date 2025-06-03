@@ -64,7 +64,6 @@ def build_kd_tree(P, D=0):
 
     left_points = [p for p in P_sorted if p[d] <= median_val and p != median_point]
     right_points = [p for p in P_sorted if p[d] > median_val]
-    print(D, start_dim)
     if D == start_dim:
         indent = '.' * D
         print(f"{indent}l{len(left_points)}")
@@ -76,7 +75,11 @@ def build_kd_tree(P, D=0):
     return node
 
 def euclidean_dist2(p1, p2):
-    return sum((a - b) ** 2 for a, b in zip(p1, p2))
+    dist = 0
+    for i in range(10):
+        diff = p1[i] - p2[i]
+        dist += diff * diff
+    return dist
 
 def find_1nn(node, target, best=None, best_dist=inf):
     if node is None:
@@ -101,14 +104,11 @@ def find_1nn(node, target, best=None, best_dist=inf):
 
     return best, best_dist
 
-if len(sys.argv) != 4:
-    print("Usage: python nn_kdtree.py [train] [test] [dimension]")
-    sys.exit(1)
-
 
 train_file = sys.argv[1]
 test_file = sys.argv[2]
 start_dim = int(sys.argv[3])
+# left_or_right = str(sys.argv[4])
 
 train_data = read_data(train_file)
 test_data = read_data(test_file)
