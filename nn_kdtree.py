@@ -76,7 +76,7 @@ def build_kd_tree(P, D=0):
 
 def euclidean_dist2(p1, p2):
     dist = 0
-    for i in range(10):
+    for i in range(11):
         diff = p1[i] - p2[i]
         dist += diff * diff
     return dist
