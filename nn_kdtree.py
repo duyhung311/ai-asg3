@@ -76,6 +76,7 @@ def build_kd_tree(P, D=0):
 
 def euclidean_dist2(p1, p2):
     dist = 0
+    print(f"p1: {p1}, p2: {p2}")
     for i in range(11):
         diff = p1[i] - p2[i]
         dist += diff * diff
@@ -119,3 +120,4 @@ for i, test_point in enumerate(test_data):
     nn, dist2 = find_1nn(tree, test_point)
     print(f"{int(nn[11])}")
     
+#python nn_kdtree.py train test-sample 0
